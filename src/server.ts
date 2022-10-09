@@ -2,6 +2,7 @@ import express from 'express';
 import http from 'http';
 import mongoose from 'mongoose';
 import { config } from './config/config';
+import { placeRouter } from './features/places/routes/place.routes';
 import Logging from './library/Logging';
 
 const app = express();
@@ -58,9 +59,10 @@ const StartServer = () => {
     });
 
     /** Routes */
+    app.use('/api/v1', placeRouter);
 
     /** Healthcheck */
-    app.get('/ping', (req, res, next) => res.status(200).json({ hello: 'world' }));
+    app.get('/api/v1/ping', (req, res, next) => res.status(200).json({ hello: 'world' }));
 
     /** Error handling */
     app.use((req, res, next) => {
