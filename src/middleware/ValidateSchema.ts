@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import Joi, { ObjectSchema } from 'joi';
+import { ObjectSchema } from 'joi';
 import Logging from '../library/Logging';
 
 export const ValidateSchema = (schema: ObjectSchema) => {
