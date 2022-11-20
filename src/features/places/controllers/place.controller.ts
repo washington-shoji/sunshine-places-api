@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { IPlace } from '../interface/place.interface';
-import { createPlaceService, getAllPlacesService, deletePlaceService, updatePlaceService } from '../service/place.service';
+import { PlaceService } from '../service/place.service';
 
-export async function createPlaceController(req: Request, res: Response) {
+async function createPlace(req: Request, res: Response) {
     const body: IPlace = req.body;
     try {
-        const place = await createPlaceService(body);
+        const place = await PlaceService.createPlace(body);
         if (place) {
             return res.status(200).send({ message: 'Place created successfully', data: place });
         }
@@ -14,9 +14,9 @@ export async function createPlaceController(req: Request, res: Response) {
     }
 }
 
-export async function getAllPlacesController(req: Request, res: Response) {
+async function getAllPlaces(req: Request, res: Response) {
     try {
-        const allPlaces = await getAllPlacesService();
+        const allPlaces = await PlaceService.getAllPlaces();
 
         if (allPlaces && allPlaces.length > 0) {
             return res.status(200).send({ message: 'Places fetched successfully', data: allPlaces });
@@ -28,12 +28,12 @@ export async function getAllPlacesController(req: Request, res: Response) {
     }
 }
 
-export async function updatePlaceByIdController(req: Request, res: Response) {
+async function updatePlaceById(req: Request, res: Response) {
     const id: string = req.params.placeId;
     const body: IPlace = req.body;
 
     try {
-        const updatedPlace = await updatePlaceService(id, body);
+        const updatedPlace = await PlaceService.updatePlace(id, body);
 
         if (updatedPlace) {
             return res.status(202).send({ message: 'Place updated successfully', data: updatedPlace });
@@ -45,11 +45,11 @@ export async function updatePlaceByIdController(req: Request, res: Response) {
     }
 }
 
-export async function deletePlaceByIdController(req: Request, res: Response) {
+async function deletePlaceById(req: Request, res: Response) {
     const id: string = req.params.placeId;
 
     try {
-        const deletePlace = await deletePlaceService(id);
+        const deletePlace = await PlaceService.deletePlace(id);
 
         if (deletePlace) {
             return res.status(202).send({ message: 'Place deleted successfully' });
@@ -60,3 +60,10 @@ export async function deletePlaceByIdController(req: Request, res: Response) {
         return res.status(500).send({ message: 'Could not delete Place', error: error });
     }
 }
+
+export const PlaceController = {
+    createPlace,
+    getAllPlaces,
+    updatePlaceById,
+    deletePlaceById
+};
