@@ -1,38 +1,45 @@
-import { PlaceModel } from '../model/place.model';
 import { IPlace } from '../interface/place.interface';
+import { PlaceRepository } from '../repository/placeRepository';
 
-export async function createPlaceService(place: IPlace) {
+async function createPlace(place: IPlace) {
     try {
-        const result = await PlaceModel.create(place);
+        const result = await PlaceRepository.cratePlace(place);
         return result;
     } catch (error) {
         throw error;
     }
 }
 
-export async function getAllPlacesService() {
+async function getAllPlaces() {
     try {
-        const result = await PlaceModel.find({});
+        const result = await PlaceRepository.getAllPlaces();
         return result;
     } catch (error) {
         throw error;
     }
 }
 
-export async function updatePlaceService(id: string, place: IPlace) {
+async function updatePlace(id: string, place: IPlace) {
     try {
-        const result = await PlaceModel.findByIdAndUpdate(id, place, { new: true });
+        const result = await PlaceRepository.updatePlace(id, place);
         return result;
     } catch (error) {
         throw error;
     }
 }
 
-export async function deletePlaceService(id: string) {
+async function deletePlace(id: string) {
     try {
-        const result = await PlaceModel.findByIdAndRemove(id);
+        const result = await PlaceRepository.deletePlace(id);
         return result;
     } catch (error) {
         throw error;
     }
 }
+
+export const PlaceService = {
+    createPlace,
+    getAllPlaces,
+    updatePlace,
+    deletePlace
+};
