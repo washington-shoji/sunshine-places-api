@@ -1,8 +1,9 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import http from 'http';
 import mongoose from 'mongoose';
 import { config } from './config/config';
 import { placeRouter } from './features/places/routes/place.routes';
+import { sydneyLayerRouter } from './features/sydney-geo-layers/routes/layer.routes';
 import Logging from './library/Logging';
 
 const app = express();
@@ -26,7 +27,7 @@ mongoose
  */
 
 const StartServer = () => {
-    app.use((req, res, next) => {
+    app.use((req: Request, res: Response, next: NextFunction) => {
         /**
          * Log the Request
          */
@@ -46,7 +47,7 @@ const StartServer = () => {
     app.use(express.json());
 
     /** Rules of our API */
-    app.use((req, res, next) => {
+    app.use((req: Request, res: Response, next: NextFunction) => {
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
@@ -60,13 +61,14 @@ const StartServer = () => {
 
     /** Routes */
     app.use('/api/v1', placeRouter);
+    app.use('/api/v1', sydneyLayerRouter);
 
-    /** Healthcheck */
-    app.get('/api/v1/ping', (req, res, next) => res.status(200).json({ hello: 'world' }));
+    /** Health-check */
+    app.get('/api/v1/ping', (req: Request, res: Response, next: NextFunction) => res.status(200).json({ hello: 'world' }));
 
     /** Error handling */
-    app.use((req, res, next) => {
-        const error = new Error('Not found');
+    app.use((req: Request, res: Response, next: NextFunction) => {
+        const error = new Error('Resource Not found');
 
         Logging.error(error);
 
