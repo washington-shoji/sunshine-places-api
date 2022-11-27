@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import { config } from './config/config';
 import { placeRouter } from './features/places/routes/place.routes';
 import { sydneyLayerRouter } from './features/sydney-geo-layers/routes/layer.routes';
+import { sydneySuburbPolygonLayerRouter } from './features/sydney-suburbs-polygon/routes/sydeySuburbPolygonLayer.routes';
 import Logging from './library/Logging';
 
 const app = express();
@@ -62,6 +63,7 @@ const StartServer = () => {
     /** Routes */
     app.use('/api/v1', placeRouter);
     app.use('/api/v1', sydneyLayerRouter);
+    app.use('/api/v1', sydneySuburbPolygonLayerRouter);
 
     /** Health-check */
     app.get('/api/v1/ping', (req: Request, res: Response, next: NextFunction) => res.status(200).json({ hello: 'world' }));
