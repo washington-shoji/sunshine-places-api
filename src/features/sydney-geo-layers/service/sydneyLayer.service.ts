@@ -1,37 +1,59 @@
-import { ILayerQueryParams, IPolygonData } from '../interface/sydneyLayer.interface';
-import { LayerModel } from '../model/sydney.model';
-import { SydneyLayerRepository } from '../repository/sydneyLayerRepository';
+import { APIError } from '../../../library/classes/api-error';
+import { BaseError } from '../../../library/classes/base-error';
+import { HttpStatusCode } from '../../../library/enums/http.enum';
+import { ILayerQueryParams, IPolygonData } from '../interface/layer.interface';
+import { LayerRepository } from '../repository/layerRepository';
 
-async function createSydneyPolygonLayer(polygonData: IPolygonData) {
+async function createPolygonLayer(polygonData: IPolygonData) {
     try {
-        const layerResult = await SydneyLayerRepository.createSydneyLayer(polygonData);
-        return layerResult;
+        const result = await LayerRepository.createLayer(polygonData);
+        if (!result) {
+            const errMessage = `Could not create ${polygonData} data.`;
+            throw new APIError(errMessage, 'createInDB', HttpStatusCode.BAD_REQUEST);
+        }
+        return result;
     } catch (error) {
-        throw error;
+        if (error instanceof APIError) {
+            throw error;
+        } else {
+            throw new BaseError('Could not perform async operation', error, 'createInDB');
+        }
     }
 }
 
-async function findSydneyLayerByCoordinates(queryParams: ILayerQueryParams) {
+async function findLayerByCoordinates(queryParams: ILayerQueryParams) {
     const { longitude, latitude } = queryParams;
     try {
-        const layerResult = SydneyLayerRepository.findSydneyLayerByCoordinates(longitude, latitude);
-        return layerResult;
+        const result = LayerRepository.findLayerByCoordinates(longitude, latitude);
+        if (!result) {
+            const errMessage = `Could not find data.`;
+            throw new APIError(errMessage, 'createInDB', HttpStatusCode.BAD_REQUEST);
+        }
+        return result;
     } catch (error) {
         throw error;
     }
 }
 
-async function findSydneyLayerBySuburb(suburb: string) {
+async function findLayerBySuburb(suburb: string) {
     try {
-        const layerResult = await SydneyLayerRepository.findSydneyLayerBySuburb(suburb);
-        return layerResult;
+        const result = await LayerRepository.findLayerBySuburb(suburb);
+        if (!result) {
+            const errMessage = `Could not find ${suburb} data.`;
+            throw new APIError(errMessage, 'findInDB', HttpStatusCode.BAD_REQUEST);
+        }
+        return result;
     } catch (error) {
-        throw error;
+        if (error instanceof APIError) {
+            throw error;
+        } else {
+            throw new BaseError('Could not perform async operation', error, 'findInDB');
+        }
     }
 }
 
-export const SydneyLayerService = {
-    createSydneyPolygonLayer,
-    findSydneyLayerByCoordinates,
-    findSydneyLayerBySuburb
+export const LayerService = {
+    createPolygonLayer,
+    findLayerByCoordinates,
+    findLayerBySuburb
 };

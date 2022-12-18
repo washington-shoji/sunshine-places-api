@@ -1,8 +1,8 @@
 import express from 'express';
-import { SydneyLayerController } from '../controllers/sydneyLayer.controller';
+import { LayerController } from '../controllers/layer.controller';
 
-export const sydneyLayerRouter = express.Router();
+export const layerRouter = express.Router();
 
-sydneyLayerRouter.post('/layer/', SydneyLayerController.createSydneyLayer);
-sydneyLayerRouter.get('/layer/', SydneyLayerController.findSydneyLayer);
-sydneyLayerRouter.get('/layer/suburb', SydneyLayerController.findSydneyLayerBySuburb);
+layerRouter.post('/layer/', LayerController.createLayer);
+layerRouter.get('/layer/', LayerController.findLayer);
+layerRouter.get('/layer/suburb', LayerController.findLayerBySuburb);

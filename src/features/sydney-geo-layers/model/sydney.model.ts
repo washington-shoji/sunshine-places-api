@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { ILayer } from '../interface/sydneyLayer.interface';
+import { ILayer } from '../interface/layer.interface';
 export interface ILayerModel extends ILayer, Document {}
 
 const polygonSchema = new Schema({
