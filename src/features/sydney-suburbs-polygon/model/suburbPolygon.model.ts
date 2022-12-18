@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { ISydneySuburbPolygonLayer } from '../interface/sydneySuburbPolygon.interface';
-export interface ISydneySuburbPolygonLayerModel extends ISydneySuburbPolygonLayer, Document {}
+import { ISuburbPolygonLayer as ISuburbPolygonLayer } from '../interface/suburbPolygon.interface';
+export interface ISuburbPolygonLayerModel extends ISuburbPolygonLayer, Document {}
 
 const polygonSchema = new Schema({
     type: {
@@ -47,4 +47,4 @@ const LayerSchema: Schema = new Schema(
 
 LayerSchema.index({ fields: '2dsphere' });
 
-export const SydneySuburbPolygonLayerModel = mongoose.model<ISydneySuburbPolygonLayerModel>('SydneySuburbCoordinates', LayerSchema);
+export const SuburbPolygonLayerModel = mongoose.model<ISuburbPolygonLayerModel>('SydneySuburbCoordinates', LayerSchema);

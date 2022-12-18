@@ -15,7 +15,7 @@ export interface IGeometry {
     coordinates: [number];
 }
 
-export interface ISydneySuburbPolygonData {
+export interface ISuburbPolygonData {
     fields: {
         shapeuuid: string;
         geo_shape: IPolygonShape;
@@ -25,7 +25,7 @@ export interface ISydneySuburbPolygonData {
     geometry: IGeometry;
 }
 
-export interface ISydneySuburbPolygonLayer {
+export interface ISuburbPolygonLayer {
     suburb: string;
     location: {
         type: string;
