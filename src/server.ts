@@ -1,11 +1,15 @@
 import express, { Request, Response, NextFunction } from 'express';
 import http from 'http';
 import mongoose from 'mongoose';
+import { BaseError } from './library/classes/base-error';
+import { ErrorHandler } from './library/classes/error-handler';
 import { config } from './config/config';
 import { placeRouter } from './features/places/routes/place.routes';
-import { sydneyLayerRouter } from './features/sydney-geo-layers/routes/layer.routes';
-import { sydneySuburbPolygonLayerRouter } from './features/sydney-suburbs-polygon/routes/sydeySuburbPolygonLayer.routes';
-import Logging from './library/Logging';
+import { riskZoneRouter } from './features/suburb-risk-zone/routes/suburbRiskZone.routes';
+import { layerRouter } from './features/sydney-geo-layers/routes/layer.routes';
+import { sydneyPolygonLayerRouter } from './features/sydney-suburbs-polygon/routes/suburbPolygonLayer.routes';
+import Logging from './library/logging/Logging';
+import { schoolRouter } from './features/sydney-schools/routes/school.routes';
 
 const app = express();
 
@@ -62,22 +66,35 @@ const StartServer = () => {
 
     /** Routes */
     app.use('/api/v1', placeRouter);
-    app.use('/api/v1', sydneyLayerRouter);
-    app.use('/api/v1', sydneySuburbPolygonLayerRouter);
+    app.use('/api/v1', layerRouter);
+    app.use('/api/v1', sydneyPolygonLayerRouter);
+    app.use('/api/v1', riskZoneRouter);
+    app.use('/api/v1', schoolRouter);
 
     /** Health-check */
     app.get('/api/v1/ping', (req: Request, res: Response, next: NextFunction) => res.status(200).json({ hello: 'world' }));
 
     /** Error handling */
-    app.use((req: Request, res: Response, next: NextFunction) => {
-        const error = new Error('Resource Not found');
 
-        Logging.error(error);
-
-        res.status(404).json({
-            message: error.message
-        });
-    });
+    const errorHandler = new ErrorHandler();
+    app.use(errorMiddleware);
 
     http.createServer(app).listen(config.server.port, () => Logging.info(`Server is running on port ${config.server.port}`));
+
+    process.on('uncaughtException', async (error: Error) => {
+        await errorHandler.handleError(error);
+        if (!errorHandler.isTrustedError(error)) process.exit(1);
+    });
+
+    process.on('unhandledRejection', (reason: Error) => {
+        throw reason;
+    });
+
+    async function errorMiddleware(error: BaseError, req: Request, res: Response, next: NextFunction) {
+        if (!errorHandler.isTrustedError(error)) {
+            next(error);
+            return;
+        }
+        await errorHandler.handleError(error);
+    }
 };
