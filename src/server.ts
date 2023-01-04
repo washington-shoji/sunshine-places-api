@@ -10,6 +10,7 @@ import { layerRouter } from './features/sydney-geo-layers/routes/layer.routes';
 import { sydneyPolygonLayerRouter } from './features/sydney-suburbs-polygon/routes/suburbPolygonLayer.routes';
 import Logging from './library/logging/Logging';
 import { schoolRouter } from './features/sydney-schools/routes/school.routes';
+import { populationGrowthRouter } from './features/population-growth/routes/populationGrowth.routes';
 
 const app = express();
 
@@ -70,6 +71,7 @@ const StartServer = () => {
     app.use('/api/v1', sydneyPolygonLayerRouter);
     app.use('/api/v1', riskZoneRouter);
     app.use('/api/v1', schoolRouter);
+    app.use('/api/v1', populationGrowthRouter);
 
     /** Health-check */
     app.get('/api/v1/ping', (req: Request, res: Response, next: NextFunction) => res.status(200).json({ hello: 'world' }));
