@@ -1,4 +1,4 @@
-import { IGeometry } from '../../../interface/interface.interface';
+import { IGeo_point_2d } from '../../../interface/interface.interface';
 
 export interface ISydneySchool {
     school_code: number;
@@ -10,5 +10,5 @@ export interface ISydneySchool {
     lga: string;
     latitude: number;
     longitude: number;
-    geometry: IGeometry;
+    geometry: IGeo_point_2d;
 }
