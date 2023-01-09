@@ -1,7 +1,16 @@
 import { SchoolLayerModel } from '../model/school.model';
 
 async function findAllSchools() {
-    const result = await SchoolLayerModel.find({});
+    const result = await SchoolLayerModel.find({})
+        .exec()
+        .then(
+            (data) => {
+                return data;
+            },
+            (error) => {
+                throw error;
+            }
+        );
     return result;
 }
 
