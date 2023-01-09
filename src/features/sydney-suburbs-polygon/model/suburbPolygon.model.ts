@@ -27,24 +27,21 @@ const geometrySchema = new Schema({
 });
 
 const fieldsSchema = new Schema({
-    shapeuuid: {
-        type: String
-    },
-    geo_shape: {
+    geo_point_3d: {
         type: polygonSchema
-    },
-    suburbname: String,
-    postcode: String
+    }
 });
 
 const LayerSchema: Schema = new Schema(
     {
-        fields: fieldsSchema,
-        geometry: geometrySchema
+        geo_point_3d: polygonSchema,
+        geo_point_2d: geometrySchema,
+        suburb_name: String,
+        post_code: String
     },
     { timestamps: true, strict: true }
 );
 
-LayerSchema.index({ fields: '2dsphere' });
+LayerSchema.index({ geo_point_2d: '2dsphere' });
 
-export const SuburbPolygonLayerModel = mongoose.model<ISuburbPolygonLayerModel>('SydneySuburbCoordinates', LayerSchema);
+export const SuburbPolygonLayerModel = mongoose.model<ISuburbPolygonLayerModel>('SuburbPolygons', LayerSchema);
