@@ -19,7 +19,7 @@ const suburbRiskZoneSchema = new Schema({
     polygonData: [
         {
             type: Schema.Types.ObjectId,
-            ref: 'SydneySuburbCoordinates'
+            ref: 'SuburbPolygons'
         }
     ]
 });
